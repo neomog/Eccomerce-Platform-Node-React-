@@ -61,11 +61,16 @@ const AddProduct = () => {
     }, []);
 
 
-    // FUNCTI5ON TO HANDLE FORM EVENT
+    // FUNCTION TO HANDLE FORM EVENT
     const handleChange = name => event => {
         const value = name === 'photo' ? event.target.files[0] : event.target.value;
         formData.set(name, value);
         setValues({...values, [name]: value});
+        // if (name === 'photo') {
+        //     console.log(event.target.files[0])
+        // } else {
+        //     console.log(event.target.value)
+        // }
     }
 
     // FUNCTION TO HANDLE FORM SUBMIT
@@ -76,7 +81,9 @@ const AddProduct = () => {
         createProduct(user._id, token, formData)
         .then(data => {
             if (data.error) {
+                console.log("error", data.error)
                 setValues({ ...values, error: data.error });
+                
             } else {
                 setValues({ 
                     ...values,
@@ -86,7 +93,9 @@ const AddProduct = () => {
                     price: '',
                     quantity: '',
                     loading: false,
-                    createdProduct: data.name
+                    createdProduct: data.name,
+                    category: '',
+                    shipping: ''
                  });
             }
         });
@@ -130,7 +139,7 @@ const AddProduct = () => {
             <h4>Post Photo</h4>
             <div className='form-group'>
                 <label className='btn btn-secondary'>
-                    <input type='file' name='photo' accept='image/*' />
+                    <input onChange={handleChange('photo')} type='file' name='photo' accept='image/*' />
                 </label>
             </div>
 
@@ -141,7 +150,7 @@ const AddProduct = () => {
 
             <div className='form-group'>
                 <label className='text-muted'>Description</label>
-                <textarea onChange={handleChange('description')} type='text' className='form-control' value={description} />
+                <textarea onChange={handleChange('description')} className='form-control' value={description} />
             </div>
 
             <div className='form-group'>

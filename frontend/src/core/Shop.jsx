@@ -31,6 +31,9 @@ const Shop = props => {
                 setCategories(data);
             }
         });
+
+        // Load products on page load
+        loadFilteredResults(skip, limit, myFilters.filters);
     };
 
     // FUNCTION TO FETCH RESULTS FROM API BASED ON THE FILTERED ITEMS
@@ -41,23 +44,23 @@ const Shop = props => {
             } else {
                 setFilteredResults(data);
                 setSize(data.size);
-                setSkip(6);
+                setSkip(0);
             }
         });
     };
 
     // FUNCTION TO LOAD MORE RESULTS FROM API BASED ON THE FILTERED ITEMS
     const loadMore = () => {
-        console.log('b4dat', filteredResults)
+        // console.log('b4dat', filteredResults)
         let toSkip = skip + limit;
-        getFilteredProducts(skip, limit, myFilters.filters).then(data => {
+        getFilteredProducts(toSkip, limit, myFilters.filters).then(data => {
             if (data.error) {
                 setError(data.error);
             } else {                
                 
                 setFilteredResults({...filteredResults, ...data});
                 // setFilteredResults(data);
-                console.log('dat', filteredResults)
+                // console.log('dat', filteredResults)
                 setSize(data.size);
                 setSkip(toSkip);
 
@@ -76,10 +79,11 @@ const Shop = props => {
 
     useEffect(() => {
         init();
-        loadFilteredResults(skip, limit, myFilters.filters);
-    }, [skip, limit, myFilters.filters, filteredResults,]);
+        
+    }, []);
     
     const handleFilters = (filters, filterBy) => {
+        // console.log('SHOP', filters, filterBy);
         const newFilters = { ...myFilters };
         newFilters.filters[filterBy] = filters;
 
@@ -128,8 +132,6 @@ const Shop = props => {
                         <Card key={i} product={product} />
                             ))}
                     </div>
-
-
 
                     <hr />
                     {loadMoreButton()}
